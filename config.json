@@ -1,0 +1,19 @@
+{
+    "availableApi" :[
+        "todo",
+        "user",
+        "course",
+        "chat"
+    ],
+    "todo":{
+        "apiLink" : "/api/todo",
+        "port" : 3003
+        
+    },
+    "db":{
+        "url1":"mongodb://localhost:27017/lms",
+        "url2":"mongodb://0.0.0.0:27017/lms",
+        "url3":"mongodb://127.0.0.0:27017/lms"
+        
+    }
+}
