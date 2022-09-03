@@ -22,6 +22,7 @@ function addTodo(req,res){
     todoModel.find({id:id},(er,dt)=>{
        let  rt = dt[0]?.list || [];
         rt  = [...rt,{tid:Date.now().toString(32) , text : text}];
+        // console.log(rt)
         todoModel.updateOne({id:id},{list : rt},(er,fd)=>{
             if(fd.acknowledged){
                 res.send('done')
@@ -87,10 +88,11 @@ function deleteTodo(req,res){
 }
 
 function getTodo(req,res){
+
     const userId = req.path.split('/').pop();
-    console.log(typeof userId)
     todoModel.findOne({id:userId},(err,result)=>{
         let rt = [];
+        // console.log(`Get Request : \n userId :${userId} result : ${result}`)
         if(result){
             rt = result.list;
         }

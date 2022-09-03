@@ -1,5 +1,6 @@
 // console.clear()
 require('./resources/clearConsole');
+require('dotenv').config();
 const cors = require('cors');
 const Express = require('express');
 const app  = Express();
@@ -12,14 +13,15 @@ const api = _Config.todo.apiLink;
 //routes
 
 const todoRoute = require('./api/routes/todoRoute');
+const mailRoute = require('./api/routes/mailRoute');
 app.use(cors());
 app.use(Express.json());
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+//   });
 //api root
 
 
@@ -31,6 +33,7 @@ app.get('/',(req,res)=>{
 // app.use('/api/user',require('./api/routes/userRoute'));
 
 app.use('/api/todo',todoRoute);
+app.use('/api/mail',mailRoute);
 
 connectDb();// start the DB connection
 app.listen(_PORT,()=>{
