@@ -1,3 +1,2 @@
-const uid = 
-    Date.now().toString(32) 
-  console.log(uid)
+const pd = undefined || "";
+console.log(pd);
