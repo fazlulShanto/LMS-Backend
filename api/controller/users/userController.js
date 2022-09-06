@@ -1,9 +1,23 @@
 const userModel = require('../../db/Model/userModel');
-
+const moment = require('moment');
+const template ={
+    first_name : "",
+    last_name : "",
+    phone : "",
+    email :"",
+    birth_date : moment("16-12-1971", "DD-MM-YYYY"),
+    address:"",
+    student_id:"",
+    session : "",
+    hall_name : "",
+    blood_group:"",
+    bio : ""
+}
 function initiateUserInfo(req,res){
     const {id} = req.params;
     console.log(req.headers)
-    const {first_name,last_name,phone,email,birth_date,address,student_id} = req.headers;
+    // const {first_name,last_name,phone,email,birth_date,address,student_id} = req.headers;
+    const {first_name,last_name,phone,email,birth_date,address,student_id} = template;
     const pd = new userModel({
         id,
         first_name,last_name,phone,email,birth_date,address,student_id
@@ -243,6 +257,7 @@ function setUserInfo(req,res){
         fb,
         github,
     }  = req.headers;
+    console.log(req.headers)
     userModel.find({id:id},(er,dt)=>{
        let  rt = dt?.github||  "";
        rt = github || "";
@@ -260,10 +275,10 @@ function setUserInfo(req,res){
             bio,
             fb,
             github},(er,fd)=>{
-            if(fd.acknowledged){
-                res.send('update github')
+            if(fd?.acknowledged){
+                res.send('update user info')
             }else{
-                res.send("can't update github")
+                res.send(er)
             }
         })
     })
