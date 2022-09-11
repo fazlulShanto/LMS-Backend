@@ -15,6 +15,8 @@ const api = _Config.todo.apiLink;
 const todoRoute = require('./api/routes/todoRoute');
 const mailRoute = require('./api/routes/mailRoute');
 const userRoute = require('./api/routes/userRoute');
+const authRoute = require('./api/routes/authRoute');
+const uploadRoute = require('./api/routes/uploadRoute');
 
 app.use(cors());
 app.use(Express.json());
@@ -37,6 +39,8 @@ app.get('/',(req,res)=>{
 app.use('/api/todo',todoRoute);
 app.use('/api/mail',mailRoute);
 app.use('/api/user',userRoute);
+app.use('/api/auth',authRoute);
+app.use('/api/upload',uploadRoute);
 
 
 connectDb();// start the DB connection
