@@ -17,6 +17,7 @@ const mailRoute = require('./api/routes/mailRoute');
 const userRoute = require('./api/routes/userRoute');
 const authRoute = require('./api/routes/authRoute');
 const uploadRoute = require('./api/routes/uploadRoute');
+const courseRoute = require('./api/routes/courseRoute');
 
 app.use(cors());
 app.use(Express.json());
@@ -41,6 +42,7 @@ app.use('/api/mail',mailRoute);
 app.use('/api/user',userRoute);
 app.use('/api/auth',authRoute);
 app.use('/api/upload',uploadRoute);
+app.use('/api/course',courseRoute);
 
 
 connectDb();// start the DB connection
