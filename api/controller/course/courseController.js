@@ -6,6 +6,8 @@ const getCourse = (req, res) => {
     courseModel.findOne({ id }, (err, result) => {
         if (result) {
             res.send(result);
+        }else{
+            res.status(400).send({message : "not found"})
         }
     });
 };
@@ -39,11 +41,62 @@ const createNewCourse = (req, res) => {
 
 const addLesson = (req, res) => {
     // console.log(req.headers)
-    const { lessonId, delta, course_uid, title } = req.headers;
-    // console.log(lessonId)
+    const { lessonid, course_uid } = req.headers;
+    // console.log(lessonid, course_uid, title )
+    // console.log(req.body)
+    const {lessonTitle,delta,resources} = req.body;
     const tasks = [];
     const newLesson = new LessonModel({
-        id:lessonId,
+        id:lessonid,
+        title:lessonTitle,
+        delta:delta,
+        tasks,
+        resources
+    });
+    // console.log(JSON.parse(delta))
+    courseModel.findOne({ id: course_uid }, (err, result) => {
+        if (result) {
+            const { lessons } = result || [];
+            lessons.push(newLesson);
+            // console.log(lessons);
+            courseModel.updateOne(
+                { id: course_uid },
+                {
+                    lessons,
+                },
+                (err, rslt) => {
+                    if (rslt.acknowledged) {
+                        // console.log(rslt);
+                        
+                        res.status(200).send({ message: "done" });
+                    }else{
+
+                        res.send({message : `can't update course lesson`});
+                    }
+                }
+            );
+        }
+
+        else{
+            console.log('no')
+          res.send({message :`can't find course`})
+        }
+    });
+    // console.log(`course :${course_uid} title :${title}\n delta :`);
+    // console.log(delta)
+    // res.status(200).send({message:"done"})
+};
+
+
+
+const bruhLesson = (req, res) => {
+    // console.log(req.headers)
+    // const course_uid = '473f8eaaef713'
+    const { lessonid, delta, title ,course_uid} = req.headers;
+    // console.log(lessonid,title,course_uid)
+    const tasks = [];
+    const newLesson = new LessonModel({
+        id:lessonid,
         title,
         delta,
         tasks,
@@ -73,6 +126,7 @@ const addLesson = (req, res) => {
         }
 
         else{
+            console.log('no')
           res.send({message :`can't find course`})
         }
     });
@@ -85,4 +139,5 @@ module.exports = {
     getCourse,
     addLesson,
     createNewCourse,
+    bruhLesson
 };

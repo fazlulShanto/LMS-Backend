@@ -1,6 +1,8 @@
 const Express = require('express');
 const router  = Express.Router();
-const {getCourse,addLesson,createNewCourse}  =require('../controller/course/courseController');
+const multer  = require('multer')
+const upload = multer()
+const {getCourse,addLesson,createNewCourse,bruhLesson}  =require('../controller/course/courseController');
 
 router.get('/',(req,res)=>{
    getCourse(req,res)
@@ -18,7 +20,17 @@ router.post('/add',(req,res)=>{
 })
 
 router.post('/add/lesson',(req,res)=>{
+    // console.log(req.f)
     addLesson(req,res);
+    
+})
+router.post('/addlesson',upload.none(),(req,res)=>{
+    // console.log(req.headers)
+    // console.log(req.body)
+    addLesson(req,res);
+    // bruhLesson(req,res)
+    // res.status(200).send({message : "working fine"})
+    // addLesson(req,res);
     
 })
 

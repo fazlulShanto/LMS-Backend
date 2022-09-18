@@ -14,7 +14,8 @@ const lessonModel =new mongoose.Schema({
         type:Object,
         require:true
     },
-    tasks:Object
+    tasks:Object,
+    resources:Array
 });
 
 module.exports = mongoose.model('lesson',lessonModel);

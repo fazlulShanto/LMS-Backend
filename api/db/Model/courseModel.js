@@ -18,7 +18,8 @@ const courseSchema =new mongoose.Schema({
     },
     desc:String,
     othersinfo : String,
-    lessons:Array
+    lessons:Array,
+    resources:Array
 });
 
 module.exports = mongoose.model('courses',courseSchema);

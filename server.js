@@ -4,6 +4,10 @@ require('dotenv').config();
 const cors = require('cors');
 const Express = require('express');
 const app  = Express();
+app.use(cors());
+app.use(Express.json({limit: '500mb'}));
+// app.use(Express.urlencoded({limit: '50mb'}));
+// app.use(Express.urlencoded({ extended: true }));
 const _Config = require('./config.json');
 const {connectDb} = require('./api/db/db');
 
@@ -19,8 +23,8 @@ const authRoute = require('./api/routes/authRoute');
 const uploadRoute = require('./api/routes/uploadRoute');
 const courseRoute = require('./api/routes/courseRoute');
 
-app.use(cors());
-app.use(Express.json());
+
+// app.use(Express.json());
 
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
