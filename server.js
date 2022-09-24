@@ -3,8 +3,15 @@ require('./resources/clearConsole');
 require('dotenv').config();
 const cors = require('cors');
 const Express = require('express');
+const path = require('path');
+const fs = require('fs');
 const app  = Express();
 app.use(cors());
+
+//static contents 
+app.use(Express.static('uploads'));
+
+
 app.use(Express.json({limit: '500mb'}));
 // app.use(Express.urlencoded({limit: '50mb'}));
 // app.use(Express.urlencoded({ extended: true }));

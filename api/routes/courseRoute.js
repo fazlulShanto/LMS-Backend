@@ -2,7 +2,8 @@ const Express = require('express');
 const router  = Express.Router();
 const multer  = require('multer')
 const upload = multer()
-const {getCourse,addLesson,createNewCourse,bruhLesson}  =require('../controller/course/courseController');
+const {multerUpload} = require('../controller/multer/multer');
+const {getCourse,addLesson,createNewCourse,deleteLesson,deleteCourse}  =require('../controller/course/courseController');
 
 router.get('/',(req,res)=>{
    getCourse(req,res)
@@ -14,23 +15,44 @@ router.post('/',(req,res)=>{
     
 })
 
-router.post('/add',(req,res)=>{
-    res.send(`course route post home`)
+router.delete('/',(req,res)=>{
+    
+    deleteCourse(req,res);
     
 })
 
-router.post('/add/lesson',(req,res)=>{
+
+router.post('/lesson/add',multerUpload().array('file'),(req,res)=>{
     // console.log(req.f)
     addLesson(req,res);
     
 })
-router.post('/addlesson',upload.none(),(req,res)=>{
+router.post('/lesson/delete',(req,res)=>{
+    // console.log(req.f)
+    
+    deleteLesson(req,res);
+    
+})
+
+router.post('/deletelesson',(req,res)=>{
+    // console.log(req.f)
+    deleteLesson(req,res);
+    
+})
+
+router.post('/addlesson',multerUpload().array('file'),(req,res)=>{
     // console.log(req.headers)
     // console.log(req.body)
     addLesson(req,res);
     // bruhLesson(req,res)
     // res.status(200).send({message : "working fine"})
     // addLesson(req,res);
+
+    // console.log(req.body.delta)
+    // req.files.forEach(v =>{
+    //     console.log(v.path)
+    // })
+    // res.status(200).send({msg : `done Upload`})
     
 })
 

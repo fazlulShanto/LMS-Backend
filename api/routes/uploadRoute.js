@@ -36,8 +36,16 @@ router.post('/',(req,res)=>{
 //     res.status(200).send(`done Upload`)
 // });
 router.post('/file',uploadToCourse().array('file'),(req,res)=>{
-    console.log(`req` , req.body)
-    res.status(200).send(`done Upload`)
+    // console.log('headers')
+    // console.log(req.headers)
+    // console.log('body')
+    // console.log(req.body)
+    // console.log('files')
+    // console.log(req.files)
+    req.files.forEach(v =>{
+        console.log(v.path)
+    })
+    res.status(200).send({msg : `done Upload`})
 });
 
 router.post('/img',(req,res)=>{
