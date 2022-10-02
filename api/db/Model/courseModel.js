@@ -6,6 +6,7 @@ const courseSchema =new mongoose.Schema({
         unique : true
     },
     instructor:String,
+    creatorid : String,
     name : {
         type:String,
         require:true,

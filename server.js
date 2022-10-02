@@ -14,7 +14,7 @@ app.use(Express.static('uploads'));
 
 app.use(Express.json({limit: '500mb'}));
 // app.use(Express.urlencoded({limit: '50mb'}));
-// app.use(Express.urlencoded({ extended: true }));
+app.use(Express.urlencoded({ extended: true }));
 const _Config = require('./config.json');
 const {connectDb} = require('./api/db/db');
 

@@ -15,11 +15,8 @@ const getCourse = (req, res) => {
 
 const createNewCourse = (req, res) => {
     // console.log(req.headers)
-    const { id, code, name, desc, othersinfo, instructor } = req.headers;
+    const { id, code, name, desc, othersinfo, instructor ,creatorid} = req.headers;
     const lessons = [];
-    console.log(
-        `${id} : ${code} -> ${name} \n ${desc} ${othersinfo} \n${lessons}`
-    );
     const newCourse = new courseModel({
         id,
         code,
@@ -28,17 +25,46 @@ const createNewCourse = (req, res) => {
         othersinfo,
         lessons: lessons,
         instructor,
+        creatorid
     });
 
     newCourse
         .save()
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((er) => console.log(er));
+        .then((result) => {
+            // console.log(creatorid)
+            // console.log(result);
 
-    res.status(200).send({ message: "nice" });
+            res.status(200).send({ message: "course created" });
+        })
+        .catch((er) => {
+            console.log(`can't create course`);
+            res.status(400).send({ message: "not nice" });
+        });
+
+    
 };
+const updateCourse = (req,res)=>{
+    console.log("course update request")
+        
+        const { id, code, name, desc, othersinfo} = req.body;
+
+                courseModel.updateOne(
+                    { id: id },
+                    {
+                        code,desc,name,othersinfo
+
+                    },
+                    (err, rslt) => {
+                        if (rslt.acknowledged) {
+                            // console.log(rslt);
+    
+                            res.status(200).send({ message: "done" });
+                        } else {
+                            res.send({ message: `can't update course lesson` });
+                        }
+                    }
+                );
+}
 
 const addLesson = (req, res) => {
     // console.log(req.headers)
@@ -126,6 +152,7 @@ const deleteLesson = (req, res) => {
 };
 
 
+
 const deleteCourse = (req, res) => {
     const { course_uid } = req.headers;
     courseModel.deleteOne({id : course_uid},(err,result)=>{
@@ -186,4 +213,5 @@ module.exports = {
     deleteCourse,
     addLesson,
     deleteLesson,
+    updateCourse
 };

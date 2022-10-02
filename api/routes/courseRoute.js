@@ -3,7 +3,7 @@ const router  = Express.Router();
 const multer  = require('multer')
 const upload = multer()
 const {multerUpload} = require('../controller/multer/multer');
-const {getCourse,addLesson,createNewCourse,deleteLesson,deleteCourse}  =require('../controller/course/courseController');
+const {getCourse,addLesson,createNewCourse,deleteLesson,deleteCourse,updateCourse}  =require('../controller/course/courseController');
 
 router.get('/',(req,res)=>{
    getCourse(req,res)
@@ -12,6 +12,11 @@ router.get('/',(req,res)=>{
 
 router.post('/',(req,res)=>{
     createNewCourse(req,res)
+    
+})
+
+router.put('/',(req,res)=>{
+    updateCourse(req,res)
     
 })
 
