@@ -29,6 +29,7 @@ const userRoute = require('./api/routes/userRoute');
 const authRoute = require('./api/routes/authRoute');
 const uploadRoute = require('./api/routes/uploadRoute');
 const courseRoute = require('./api/routes/courseRoute');
+const taskRoute = require('./api/routes/taskRoute');
 
 
 // app.use(Express.json());
@@ -54,6 +55,7 @@ app.use('/api/user',userRoute);
 app.use('/api/auth',authRoute);
 app.use('/api/upload',uploadRoute);
 app.use('/api/course',courseRoute);
+app.use('/api/task',taskRoute);
 
 
 connectDb();// start the DB connection
