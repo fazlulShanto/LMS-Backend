@@ -1,23 +1,40 @@
 const mongoose = require('mongoose');
 
 const userSchema =new mongoose.Schema({
-    id:{
+    user_uuid:{
         type:String,
-        unique : true
+        unique : true,
+        required : true
     },
-    first_name :String,
-    last_name : String,
-    phone: String,
-    email :String,
-    birth_date : Date,
-    address : String,
-    student_id : String,
-    session : String,
-    hall_name : String,
-    blood_group : String,
-    bio : String,
-    fb : String,
-    github: String
+    username:{
+        type:String
+    },
+    email:{
+        type:String,
+        unique : true,
+        required : true
+    },
+    password : {
+        type:String,
+        required : true
+    },
+    approved :{
+        type:Boolean,
+        required:true,
+        default:false
+    },
+    roles:{
+        type:Object,
+        default:{
+            "User": 10000
+        }
+    },
+    refresh_token:{
+        type: String
+    },
+    access_token:{
+        type: String
+    }
 });
 
 

@@ -1,7 +1,10 @@
 const Express = require('express');
 const router  = Express.Router();
 const {initiateUserInfo,setUserInfo,getUserInfo,setUserFirstName,setPhoneNumber,setBloodGroup,setFB,setGithub,
-    setUserLastName, setMail,setBirthdate,setAddress,setStudentId,setSession,setHallName, setBio} = require('../controller/users/userController');
+    setUserLastName, setMail,setBirthdate,setAddress,setStudentId,
+    getAllUnApprovedUser,setSession,setHallName, setBio,
+    getAllApprovedStudent,getAllApprovedTeacher
+} = require('../controller/users/userController');
 
 router.get('/',(req,res)=>{
     // res.statusCode =400;
@@ -62,6 +65,15 @@ router.post('/set/fb/:id/',(req,res)=>{
 })
 router.post('/set/github/:id/',(req,res)=>{
     setGithub(req,res);
+})
+router.get('/allunapproved',(req,res)=>{
+    getAllUnApprovedUser(req,res);
+})
+router.get('/approved-student',(req,res)=>{
+    getAllApprovedStudent(req,res);
+})
+router.get('/approved-teacher',(req,res)=>{
+    getAllApprovedTeacher(req,res);
 })
 
 module.exports = router;

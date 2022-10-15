@@ -296,9 +296,83 @@ function getUserInfo(req,res){
    
 }
 
+async function getAllUnApprovedUser(req,res){
+    const allUser = await userModel.find({approved:false}).exec();
+    if(allUser.length){
+        const modifiedUser = allUser.map(us =>{
+            const pd = {
+                key:Math.random(),
+                email:us.email,
+                role : Object.keys(us.roles).includes('Teacher') && 'Teacher' || 'Student',
+                user_uuid : us.user_uuid
+            };
+            return pd
+        })
+
+      return  res.status(200).json(modifiedUser);
+    }
+    return res.status(200).json([]);
+}
+async function getAllApprovedStudent(req,res){
+    const allUser = await userModel.find({approved:true}).where({
+        'roles.Student' :35909
+    }).exec();
+    if(allUser.length){
+        const modifiedUser = allUser.map(us =>{
+            const pd = {
+                key:Math.random(),
+                email:us.email,
+                role : Object.keys(us.roles).includes('Teacher') && 'Teacher' || 'Student',
+                user_uuid : us.user_uuid
+            };
+            return pd
+        })
+
+      return  res.status(200).json(modifiedUser);
+    }
+    return res.status(200).json([]);
+}
+async function getAllApprovedTeacher(req,res){
+    const allUser = await userModel.find({approved:true}).where({
+        'roles.Teacher' :63521
+    }).exec();
+    if(allUser.length){
+        const modifiedUser = allUser.map(us =>{
+            const pd = {
+                key:Math.random(),
+                email:us.email,
+                role : Object.keys(us.roles).includes('Teacher') && 'Teacher' || 'Student',
+                user_uuid : us.user_uuid
+            };
+            return pd
+        })
+
+      return  res.status(200).json(modifiedUser);
+    }
+    return res.status(200).json([]);
+}
+async function getAllApprovedUser(req,res){
+    const allUser = await userModel.find({approved:true}).exec();
+    if(allUser.length){
+        const modifiedUser = allUser.map(us =>{
+            const pd = {
+                key:Math.random(),
+                email:us.email,
+                role : Object.keys(us.roles).includes('Teacher') && 'Teacher' || 'Student',
+                user_uuid : us.user_uuid
+            };
+            return pd
+        })
+
+      return  res.status(200).json(modifiedUser);
+    }
+    return res.status(200).json([]);
+}
+
 
 module.exports = {
     initiateUserInfo, setUserInfo,getUserInfo,setUserName,setUserFirstName,
     setUserLastName,setMail,setPhoneNumber,setBirthdate,setAddress,setStudentId,
-    setSession,setHallName,setBloodGroup,setBio,setFB,setGithub
+    setSession,setHallName,setBloodGroup,setBio,setFB,setGithub,getAllUnApprovedUser,
+    getAllApprovedStudent,getAllApprovedTeacher
 }

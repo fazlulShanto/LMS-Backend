@@ -2,6 +2,10 @@ const Express = require('express');
 const Multer  = require('multer');
 const multer = Multer();
 const router  = Express.Router();
+const {verifyRoles} = require('../middleware/verifyRoles');
+
+
+
 const {addTask,taskList,getTask,deleteTask,
        addResponse,getAllResponse,getSingleResponse }  =require('../controller/task/taskController');
 
@@ -10,7 +14,7 @@ router.get('/',(req,res)=>{
     taskList(req,res);
    
 })
-router.get('/:id',(req,res)=>{
+router.get('/:id',verifyRoles(80280,35909),(req,res)=>{
     getTask(req,res);
 });
 router.post('/',multer.none() ,(req,res)=>{

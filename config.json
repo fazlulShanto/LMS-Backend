@@ -15,5 +15,11 @@
         "url2":"mongodb://0.0.0.0:27017/lms",
         "url3":"mongodb://127.0.0.0:27017/lms"
         
+    },
+    "roles":{
+        "Admin":80280 ,
+        "Teacher":63521,
+        "TA" : 13189,
+        "Student":35909
     }
 }
