@@ -351,6 +351,14 @@ async function getAllApprovedTeacher(req,res){
     }
     return res.status(200).json([]);
 }
+async function getAllCourses(req,res){
+    const {id} = req.headers;
+    const user = await userModel.find({user_uuid:id}).exec();
+    if(user?.courses){
+      return  res.status(200).json(user.courses);
+    }
+    return res.status(200).json([]);
+}
 async function getAllApprovedUser(req,res){
     const allUser = await userModel.find({approved:true}).exec();
     if(allUser.length){
@@ -370,9 +378,10 @@ async function getAllApprovedUser(req,res){
 }
 
 
+
 module.exports = {
     initiateUserInfo, setUserInfo,getUserInfo,setUserName,setUserFirstName,
     setUserLastName,setMail,setPhoneNumber,setBirthdate,setAddress,setStudentId,
     setSession,setHallName,setBloodGroup,setBio,setFB,setGithub,getAllUnApprovedUser,
-    getAllApprovedStudent,getAllApprovedTeacher
+    getAllApprovedStudent,getAllApprovedTeacher,getAllCourses
 }

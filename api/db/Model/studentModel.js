@@ -17,6 +17,7 @@ const studentSchema =new mongoose.Schema({
     blood_group : String,
     bio : String,
     fb : String,
+    enrolledCourses : Array ,
     github: String
 });
 

@@ -3,14 +3,14 @@ const router  = Express.Router();
 const multer  = require('multer')
 const upload = multer()
 const {multerUpload} = require('../controller/multer/multer');
-const {getCourse,addLesson,createNewCourse,deleteLesson,deleteCourse,updateCourse}  =require('../controller/course/courseController');
+const {getCourse,addLesson,createNewCourse,deleteLesson,deleteCourse,updateCourse,getTeacherCourseList}  =require('../controller/course/courseController');
 
 router.get('/',(req,res)=>{
    getCourse(req,res)
     
 })
 
-router.post('/',(req,res)=>{
+router.post('/',upload.none(),(req,res)=>{
     createNewCourse(req,res)
     
 })
@@ -21,11 +21,13 @@ router.put('/',(req,res)=>{
 })
 
 router.delete('/',(req,res)=>{
-    
     deleteCourse(req,res);
     
 })
 
+router.get('/teacher-course',(req,res)=>{
+    getTeacherCourseList(req,res);
+})
 
 router.post('/lesson/add',multerUpload().array('file'),(req,res)=>{
     // console.log(req.f)
@@ -34,7 +36,6 @@ router.post('/lesson/add',multerUpload().array('file'),(req,res)=>{
 })
 router.post('/lesson/delete',(req,res)=>{
     // console.log(req.f)
-    
     deleteLesson(req,res);
     
 })

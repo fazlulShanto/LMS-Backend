@@ -44,6 +44,7 @@ const registrationRoute = require('./api/routes/regsitrationRoute')
 const refreshRoute = require('./api/routes/refreshRoute')
 const logoutRoute = require('./api/routes/logoutRoute')
 const adminRoute = require('./api/routes/adminRoute')
+const teacherRoute = require('./api/routes/teacherRoute')
 
 
 // app.use(Express.json());
@@ -72,6 +73,7 @@ app.use('/api/admin',adminRoute);
 // app.use(verifyJWT);
 
 app.use('/api/todo',todoRoute);
+app.use('/api/user/teacher',teacherRoute);
 app.use('/api/mail',mailRoute);
 app.use('/api/user',userRoute);
 app.use('/api/upload',uploadRoute);

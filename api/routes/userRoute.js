@@ -3,7 +3,7 @@ const router  = Express.Router();
 const {initiateUserInfo,setUserInfo,getUserInfo,setUserFirstName,setPhoneNumber,setBloodGroup,setFB,setGithub,
     setUserLastName, setMail,setBirthdate,setAddress,setStudentId,
     getAllUnApprovedUser,setSession,setHallName, setBio,
-    getAllApprovedStudent,getAllApprovedTeacher
+    getAllApprovedStudent,getAllApprovedTeacher,getAllCourses
 } = require('../controller/users/userController');
 
 router.get('/',(req,res)=>{
@@ -74,6 +74,10 @@ router.get('/approved-student',(req,res)=>{
 })
 router.get('/approved-teacher',(req,res)=>{
     getAllApprovedTeacher(req,res);
+})
+router.get('/all-courses',(req,res)=>{
+    console.log(req.headers)
+    getAllCourses(req,res);
 })
 
 module.exports = router;

@@ -15,20 +15,23 @@ function initiateUserTodo(req,res){
     res.send('done');
 
 }
-function addTodo(req,res){
-    // console.log(req.path,req.params,req.query)
+async function addTodo(req,res){
+    // console.log(req.params,req.query)
     const {id} = req.params;
     const {text} = req.query;
-    todoModel.find({id:id},(er,dt)=>{
-       let  rt = dt[0]?.list || [];
-        rt  = [...rt,{tid:Date.now().toString(32) , text : text}];
-        // console.log(rt)
-        todoModel.updateOne({id:id},{list : rt},(er,fd)=>{
-            if(fd.acknowledged){
-                res.send('done')
-            }
-        })
-    })
+   const pd = await todoModel.findOneAndUpdate({id:id},
+        {
+            $push:{list : {tid:Date.now().toString(32) , text : text} }
+        },
+        {
+            upsert:true,
+            new:true
+        }
+        );
+        if(pd){
+            res.status(200);
+        }
+        res.status(500).send('not Done')
 }
 
 function editTodo(req,res){

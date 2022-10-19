@@ -1,4 +1,5 @@
 const courseModel = require("../../db/Model/courseModel");
+const teacherModel = require("../../db/Model/teacherModel");
 const LessonModel = require("../../db/Model/LessonModel");
 const path = require("path");
 
@@ -12,10 +13,24 @@ const getCourse = (req, res) => {
         }
     });
 };
-
+const getTeacherCourseList = async (req,res) =>{
+    const {id} = req.headers;
+    // console.log(`id = ${id}`)
+    const list = await courseModel.find({creatorid:id}).exec();
+    if(list){
+        // console.log(list)
+        return res.status(201).send({
+        message:'ok',
+        courses : list
+    });
+    }
+    else{
+        res.status(500).send();
+    }
+}
 const createNewCourse = (req, res) => {
     // console.log(req.headers)
-    const { id, code, name, desc, othersinfo, instructor ,creatorid} = req.headers;
+    const { id, code, name, desc, othersinfo, instructor ,creatorid} = req.body;
     const lessons = [];
     const newCourse = new courseModel({
         id,
@@ -27,17 +42,17 @@ const createNewCourse = (req, res) => {
         instructor,
         creatorid
     });
-
+// console.log(req.body)
     newCourse
         .save()
-        .then((result) => {
+        .then(async (result) => {
             // console.log(creatorid)
             // console.log(result);
-
             res.status(200).send({ message: "course created" });
         })
         .catch((er) => {
             console.log(`can't create course`);
+            console.log(er)
             res.status(400).send({ message: "not nice" });
         });
 
@@ -213,5 +228,6 @@ module.exports = {
     deleteCourse,
     addLesson,
     deleteLesson,
-    updateCourse
+    updateCourse,
+    getTeacherCourseList
 };

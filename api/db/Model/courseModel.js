@@ -5,7 +5,10 @@ const courseSchema =new mongoose.Schema({
         type:String,
         unique : true
     },
-    instructor:String,
+    instructor: {
+        type:String,
+        require:true
+    },
     creatorid : String,
     name : {
         type:String,
@@ -20,7 +23,14 @@ const courseSchema =new mongoose.Schema({
     desc:String,
     othersinfo : String,
     lessons:Array,
-    resources:Array
+    resources:Array,
+    students:Array,
+    lastupdate :  {
+        type:String,
+        require:true,
+        default : new Date().toLocaleDateString()
+    },
+    tasks:Array
 });
 
 module.exports = mongoose.model('courses',courseSchema);

@@ -2,6 +2,8 @@ const userModel = require('../../db/Model/userModel');
 
 const allowUser = async (id)=>{
     const dbUser = await userModel.updateOne({user_uuid:id},{approved : true}).exec();   
+    
+    
     if(dbUser.modifiedCount){
         return true;
     }    

@@ -29,6 +29,9 @@ const userSchema =new mongoose.Schema({
             "User": 10000
         }
     },
+    courses:{
+        type:Array,
+    },
     refresh_token:{
         type: String
     },
