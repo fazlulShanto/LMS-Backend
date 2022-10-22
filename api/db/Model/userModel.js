@@ -31,6 +31,7 @@ const userSchema =new mongoose.Schema({
     },
     courses:{
         type:Array,
+        default:[]
     },
     refresh_token:{
         type: String

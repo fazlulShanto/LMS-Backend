@@ -353,7 +353,9 @@ async function getAllApprovedTeacher(req,res){
 }
 async function getAllCourses(req,res){
     const {id} = req.headers;
-    const user = await userModel.find({user_uuid:id}).exec();
+   
+    const user = await userModel.findOne({user_uuid:id}).exec();
+    // console.log(user)
     if(user?.courses){
       return  res.status(200).json(user.courses);
     }

@@ -1,6 +1,7 @@
 const courseModel = require("../../db/Model/courseModel");
 const teacherModel = require("../../db/Model/teacherModel");
 const LessonModel = require("../../db/Model/LessonModel");
+const userModel = require("../../db/Model/userModel");
 const path = require("path");
 
 const getCourse = (req, res) => {
@@ -28,9 +29,36 @@ const getTeacherCourseList = async (req,res) =>{
         res.status(500).send();
     }
 }
+const getStudentCourseList = async (req,res) =>{
+    const {id} = req.headers;
+    const list = await userModel.findOne({user_uuid:id}).exec();
+    if(list?.courses){
+
+        const getSingleCourseInfo = async (coid)=>{
+            const cD = await courseModel.findOne({id:coid}).exec();
+            if(cD){
+                return cD;
+            }
+            return false;
+        }
+
+      const Cod =  await Promise.all(await list.courses.map(async (courseId)=>{ return await getSingleCourseInfo(courseId) }));
+
+
+        
+        return res.status(201).send({
+        message:'ok',
+        courses : Cod
+    });
+    }
+    else{
+        res.status(500).send();
+    }
+}
 const createNewCourse = (req, res) => {
     // console.log(req.headers)
-    const { id, code, name, desc, othersinfo, instructor ,creatorid} = req.body;
+    const { id, code, name, desc, othersinfo, instructor ,creatorid,activeday} = req.body;
+    const parsedActiveday = activeday.split(',').filter(v => parseInt(v)).map(v => parseInt(v));
     const lessons = [];
     const newCourse = new courseModel({
         id,
@@ -40,7 +68,8 @@ const createNewCourse = (req, res) => {
         othersinfo,
         lessons: lessons,
         instructor,
-        creatorid
+        creatorid,
+        activeday :parsedActiveday
     });
 // console.log(req.body)
     newCourse
@@ -178,6 +207,191 @@ const deleteCourse = (req, res) => {
     })
     // res.send("delete lesson");
 };
+const addStudentToCourse = async (req, res) => {
+    const { cid, student_id } = req.body;
+    let statusCode = 200;
+    const messageObj = {
+        type: 'success',
+        message: ''
+    }
+    //check if user exist in the course
+    const chkCourseStd = await courseModel.findOne({ id: cid }).exec();
+    if (chkCourseStd?.students) {
+        const searchStd = chkCourseStd.students.find((v) => v.stdudent_id == student_id);
+        if (searchStd) {
+            statusCode = 401;
+            messageObj.error = `User already enrolled to the course / wait till Teacher Accept your Request.`
+        }
+        else {
+            const courseStdList = await courseModel.findOneAndUpdate({ id: cid }, {
+                $push: {
+                    students: {
+                        stdudent_id: student_id,
+                        status: false
+                    }
+                }
+            }).exec();
+            // console.log(`Update Course :`,courseStdList)
+            if (!courseStdList) {
+                messageObj.error = `Can't update Course Student list in DB`;
+            }
+        }
+    }else{
+
+        statusCode = 404;
+        messageObj.type = 'error';
+        messageObj.error = `Course doesn't exist.`
+    }
+    return res.status(statusCode).json(messageObj);
+}
+const approveStudentToCourse = async (req, res) => {
+    const { cid, student_id } = req.body;
+    let statusCode = 200;
+    const messageObj = {
+        type: 'success',
+        message: ''
+    }
+    //check if user exist in the course
+    const chkCourseStd = await courseModel.findOne({ id: cid }).exec();
+    if (chkCourseStd?.students) {
+        const searchStd = chkCourseStd.students.find((v) => v.stdudent_id == student_id);
+        if (!searchStd) {
+            statusCode = 401;
+            messageObj.type='error';
+            messageObj.error = `User din't not enrolled to the course`
+        }
+        else {
+            const courseStdList = await courseModel.findOneAndUpdate({ id: cid ,
+                    "students.stdudent_id":student_id
+                }, {
+                    "$set":{
+                        "students.$.status": true
+                    }
+            }).exec();
+            // console.log(`Update Course :`,courseStdList)
+            if (!courseStdList) {
+                messageObj.error = `Can't update Course Student list in DB`;
+            }else{
+                //add the course in student course list
+                const poorStudent = await userModel.findOneAndUpdate({user_uuid: student_id},{
+                    $push : {
+                        courses:cid
+                    }
+                }).exec();
+
+                if(poorStudent){
+                messageObj.message = 'Done!'}
+                else{
+                    statusCode = 401;
+                    messageObj.message = `can't update user course list`
+                }
+            }
+        }
+    }else{
+
+        statusCode = 404;
+        messageObj.type = 'error';
+        messageObj.error = `Course doesn't exist.`
+    }
+    return res.status(statusCode).json(messageObj);
+}
+const removeStudentToCourse = async (req, res) => {
+    const { cid, student_id } = req.body;
+    let statusCode = 200;
+    const messageObj = {
+        type: 'success',
+        message: ''
+    }
+    //check if user exist in the course
+    const chkCourseStd = await courseModel.findOne({ id: cid }).exec();
+    if (chkCourseStd?.students) {
+        const searchStd = chkCourseStd.students.find((v) => v.stdudent_id == student_id);
+        if (!searchStd) {
+            statusCode = 401;
+            messageObj.type='error';
+            messageObj.error = `User din't not enrolled to the course`
+        }
+        else {
+            const courseStdList = await courseModel.updateOne({ id: cid ,
+                    "students.stdudent_id":student_id
+                }, {
+                    $pull:{
+                        students:{
+                            stdudent_id:student_id
+                        }
+                    }
+            }).exec();
+            // console.log(`Update Course :`,courseStdList)
+            if (!courseStdList) {
+                messageObj.error = `Can't update Course Student list in DB`;
+            }else{
+                //add the course in student course list
+                const poorStudent = await userModel.updateOne({user_uuid: student_id},{
+                    $pull : {
+                        courses:cid
+                    }
+                }).exec();
+
+                if(poorStudent){
+                messageObj.message = 'Done!'}
+                else{
+                    statusCode = 401;
+                    messageObj.message = `can't update user course list`
+                }
+            }
+        }
+    }else{
+
+        statusCode = 404;
+        messageObj.type = 'error';
+        messageObj.error = `Course doesn't exist.`
+    }
+    return res.status(statusCode).json(messageObj);
+}
+
+const getCourseStudentList = async (req,res)=>{
+    const {cid}= req.headers;
+    // console.log(cid)
+    const rs = await courseModel.findOne({id : cid}).exec();
+    // console.log(rs.students)
+    if(rs?.students){
+        const {students} = rs;
+        const singleUserInfo = async (v)=>{
+            const ui = await userModel.findOne({user_uuid:v.stdudent_id}).exec();
+            if(ui){
+                return ({
+                    id: v.stdudent_id,
+                    name : ui.username,
+                    email : ui.email,
+                    avatar : null,
+                    status : v.status
+                })
+            };
+            return false;
+        }
+       const infoList =  await Promise.all(await students.map( async (v) => await singleUserInfo(v) ))
+
+        const approved = infoList.filter(v => v.status);
+        const unAprroved = infoList.filter(v => !v.status);
+        const teacherInfo  = {
+            name : rs.instructor,
+            id :rs.creatorid,
+            status : true
+        }
+        const tcInfo = await userModel.findOne({user_uuid: rs.creatorid}).exec();
+        // console.log(tcInfo)
+        if(tcInfo){
+            teacherInfo.email = tcInfo.email;
+            teacherInfo.avatar = null
+        }
+
+        return res.status(200).json(
+            {approved,unAprroved,teacherInfo}
+        );
+    }else{
+        return res.status(404).send('No data found')
+    }
+}
 
 const bruhLesson = (req, res) => {
     // console.log(req.headers)
@@ -229,5 +443,10 @@ module.exports = {
     addLesson,
     deleteLesson,
     updateCourse,
-    getTeacherCourseList
+    getTeacherCourseList,
+    addStudentToCourse,
+    getCourseStudentList,
+    approveStudentToCourse,
+    removeStudentToCourse,
+    getStudentCourseList
 };

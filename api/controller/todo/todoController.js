@@ -28,10 +28,11 @@ async function addTodo(req,res){
             new:true
         }
         );
+        // console.log(pd)
         if(pd){
-            res.status(200);
+          return  res.status(200);
         }
-        res.status(500).send('not Done')
+       return res.status(500).send('not Done')
 }
 
 function editTodo(req,res){

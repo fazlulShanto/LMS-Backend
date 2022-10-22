@@ -76,7 +76,7 @@ router.get('/approved-teacher',(req,res)=>{
     getAllApprovedTeacher(req,res);
 })
 router.get('/all-courses',(req,res)=>{
-    console.log(req.headers)
+    // console.log(req.headers)
     getAllCourses(req,res);
 })
 

@@ -21,8 +21,12 @@ const courseSchema =new mongoose.Schema({
         unique : true
     },
     desc:String,
+    activeday:Array,
     othersinfo : String,
-    lessons:Array,
+    lessons: {
+        type : Array,
+        default : []
+    },
     resources:Array,
     students:Array,
     lastupdate :  {
@@ -30,7 +34,10 @@ const courseSchema =new mongoose.Schema({
         require:true,
         default : new Date().toLocaleDateString()
     },
-    tasks:Array
+    tasks:{
+        type : Array,
+        default : []
+    }
 });
 
 module.exports = mongoose.model('courses',courseSchema);
