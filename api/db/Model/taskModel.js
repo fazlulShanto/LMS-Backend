@@ -24,6 +24,10 @@ const taskSchema =new mongoose.Schema({
         type : Boolean,
         default : false
     },
+    final_result  : {
+        type : Boolean,
+        default : false
+    },
     examinees :Array,
     time_start: String,
     time_end : String,

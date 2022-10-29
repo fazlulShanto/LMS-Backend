@@ -6,15 +6,15 @@ const {verifyRoles} = require('../middleware/verifyRoles');
 
 
 
-const {addTask,taskList,getTask,deleteTask,
+const {addTask,courseTaskList,getTask,deleteTask,
        addResponse,getAllResponse,getSingleResponse }  =require('../controller/task/taskController');
 
 router.get('/',(req,res)=>{
     // res.statusCode =400;
-    taskList(req,res);
+    courseTaskList(req,res);
    
 })
-router.get('/:id',verifyRoles(80280,35909),(req,res)=>{
+router.get('/:id',(req,res)=>{
     getTask(req,res);
 });
 router.post('/',multer.none() ,(req,res)=>{
