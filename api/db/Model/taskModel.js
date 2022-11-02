@@ -28,6 +28,10 @@ const taskSchema =new mongoose.Schema({
         type : Boolean,
         default : false
     },
+    resultSheet  : {
+        type : Array,
+        default : []
+    },
     examinees :Array,
     time_start: String,
     time_end : String,

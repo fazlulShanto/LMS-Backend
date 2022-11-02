@@ -285,9 +285,9 @@ function setUserInfo(req,res){
 }
 function getUserInfo(req,res){
     const {id} = req.params;
-    userModel.findOne({id:id},(err,result)=>{
+    userModel.findOne({user_uuid:id},(err,result)=>{
         let rt = [];
-        // console.log(`Get Request : \n userId :${userId} result : ${result}`)
+        // console.log(`Get Request : \n userId :${id} result : ${result}`)
         if(result){
             rt = result;
         }

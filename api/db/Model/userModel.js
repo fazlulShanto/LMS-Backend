@@ -1,42 +1,47 @@
 const mongoose = require('mongoose');
 
-const userSchema =new mongoose.Schema({
-    user_uuid:{
-        type:String,
-        unique : true,
-        required : true
+const userSchema = new mongoose.Schema({
+    user_uuid: {
+        type: String,
+        unique: true,
+        required: true
     },
-    username:{
-        type:String
+    username: {
+        type: String
     },
-    email:{
-        type:String,
-        unique : true,
-        required : true
+
+    student_id: {
+        type: String
+    }
+    ,
+    email: {
+        type: String,
+        unique: true,
+        required: true
     },
-    password : {
-        type:String,
-        required : true
+    password: {
+        type: String,
+        required: true
     },
-    approved :{
-        type:Boolean,
-        required:true,
-        default:false
+    approved: {
+        type: Boolean,
+        required: true,
+        default: false
     },
-    roles:{
-        type:Object,
-        default:{
+    roles: {
+        type: Object,
+        default: {
             "User": 10000
         }
     },
-    courses:{
-        type:Array,
-        default:[]
+    courses: {
+        type: Array,
+        default: []
     },
-    refresh_token:{
+    refresh_token: {
         type: String
     },
-    access_token:{
+    access_token: {
         type: String
     }
 });
@@ -44,4 +49,4 @@ const userSchema =new mongoose.Schema({
 
 
 
-module.exports = mongoose.model('User',userSchema);
+module.exports = mongoose.model('User', userSchema);

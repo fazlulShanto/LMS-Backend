@@ -107,6 +107,9 @@ const judgeResponse = async (taskid, rep) => {
         const { qid, ans } = v;
         userMcq[qid] = ans;
     });
+
+    const shortA =  rep.filter((v) => typeof v.ans === "string");
+
     // console.log(userMcq)
     let result = 0;
     const correct = [];
@@ -133,6 +136,7 @@ const judgeResponse = async (taskid, rep) => {
         correct: correct,
         total: data.mcq.length,
         incorrect: incorrect,
+        shortans : shortA
     };
 };
 
@@ -142,7 +146,6 @@ const addResponse = async (req, res) => {
     // console.log(response,userid,taskid)
 
     const verdict = await judgeResponse(taskid, response);
-
     const dbSave = {
         studentid : userid,
         response : verdict
@@ -163,6 +166,51 @@ const addResponse = async (req, res) => {
 const getAllResponse = (req, res) => {};
 
 const getSingleResponse = (req, res) => {};
+const updateResult = async (taskid , studentid , marks= 0) =>{
+    const task = await taskModel.findOne({taskid:taskid}).exec();
+    if(task){
+        let oldResult = task.resultSheet;
+        let flag = true;
+        oldResult.forEach( v =>{
+            if(v.studentid === studentid){
+                v.marks = marks;
+                flag = false;
+            }
+        })
+        if(flag){
+            oldResult.push({
+                studentid: studentid,
+                marks : marks
+            });
+        }
+
+        const updateResult = await taskModel.findOneAndUpdate({taskid : taskid} , {
+            $set : {
+                resultSheet : oldResult
+            }
+        }).exec();
+
+        if(updateResult){
+            return true;
+        }
+        return false;
+    }
+}
+
+const publishResult = (status = false,tid)=>{
+    if(typeof(status) != 'boolean'){
+        status = false;
+    }
+    const rs = taskModel.findOneAndUpdate({taskid : tid} , {
+        $set : {
+            final_result : status
+        }
+    }).exec();
+    if(rs){
+        return true;
+    }
+    return false;
+}
 
 module.exports = {
     courseTaskList,
@@ -172,4 +220,6 @@ module.exports = {
     addResponse,
     getAllResponse,
     getSingleResponse,
+    updateResult,
+    publishResult
 };
