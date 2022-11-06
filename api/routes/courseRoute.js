@@ -5,7 +5,7 @@ const upload = multer()
 const {multerUpload} = require('../controller/multer/multer');
 const {getCourse,addLesson,createNewCourse,approveStudentToCourse,getStudentCourseList,
     deleteLesson,deleteCourse,updateCourse,getCourseStudentList,removeStudentToCourse,
-    getTeacherCourseList,addStudentToCourse} 
+    getTeacherCourseList,addStudentToCourse,postAnnouncement,getAnnouncement,deleteAnnouncement} 
  =require('../controller/course/courseController');
 
 router.get('/',(req,res)=>{
@@ -80,5 +80,21 @@ router.post('/addlesson',multerUpload().array('file'),(req,res)=>{
     
 })
 
+
+router.get('/announcement',(req,res)=>{
+
+    getAnnouncement(req,res);
+})
+
+router.post('/announcement',upload.none(),(req,res)=>{
+   
+    postAnnouncement(req,res)
+    
+})
+router.delete('/announcement',upload.none(),(req,res)=>{
+   
+    deleteAnnouncement(req,res)
+    
+})
 
 module.exports = router;

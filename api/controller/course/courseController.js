@@ -436,6 +436,47 @@ const bruhLesson = (req, res) => {
     // res.status(200).send({message:"done"})
 };
 
+const postAnnouncement = async (req,res) =>{
+    const temid  = Math.random().toString(36).slice(2);
+    const {cid,post,date } = req.body;
+   const pd = await courseModel.findOneAndUpdate({id:cid},{
+        $push : {
+            announcement : {post,date, id : temid}
+        }
+    } ).exec();
+    if(pd){
+        return res.status(200).send("done");
+    }
+    return res.status(500).send("not done");
+}
+const deleteAnnouncement = async (req,res) =>{
+    const {cid,postid } = req.body;
+   const pd = await courseModel.findOneAndUpdate({id:cid},{
+        $pull : {
+            announcement : {
+                id : postid
+            }
+        }
+    } ).exec();
+    if(pd){
+        return res.status(200).send("done");
+    }
+    return res.status(500).send("not done");
+}
+const getAnnouncement = async (req,res) =>{
+
+    const {cid} = req.headers;
+
+    
+   const pd = await courseModel.findOne({id : cid}).exec();
+    if(pd){
+       
+        return res.status(200).send(pd.announcement);
+    }
+    
+    return res.status(200).send([]);
+}
+
 module.exports = {
     getCourse,
     createNewCourse,
@@ -448,5 +489,8 @@ module.exports = {
     getCourseStudentList,
     approveStudentToCourse,
     removeStudentToCourse,
-    getStudentCourseList
+    getStudentCourseList,
+    postAnnouncement,
+    getAnnouncement,
+    deleteAnnouncement
 };

@@ -37,6 +37,11 @@ const courseSchema =new mongoose.Schema({
     tasks:{
         type : Array,
         default : []
+    },
+    announcement:{
+        type : Array,
+        default: []
+        // id,text ,date
     }
 });
 
