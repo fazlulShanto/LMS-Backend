@@ -4,7 +4,7 @@ const {sendOTP} = require('../../controller/mail/mailController');
 const {deleteOtp,getOtp} = require('../../controller/otp/optController');
 
 const handleNewUser = async (req,res) =>{
-    const {email,pwd,isTeacher,form_otp,username} = req.body;
+    const {email,pwd,isTeacher,form_otp,lastname,firstname} = req.body;
     // console.log('rq',req.body)
     if(!email || !pwd){
         return res.status(400).send({
@@ -40,7 +40,8 @@ const handleNewUser = async (req,res) =>{
         password : hashedPassword,
         roles:userRoles,
         approved:false,
-        username:username
+        firstname : firstname,
+        lastname : lastname
     }).save();
     await deleteOtp(email);
     return res.status(201).send({

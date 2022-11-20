@@ -1,52 +1,88 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
     user_uuid: {
         type: String,
         unique: true,
-        required: true
+        required: true,
     },
     username: {
-        type: String
+        type: String,
     },
-
+    profile_image: {
+        type: String,
+        default: "default.png",
+    },
     student_id: {
-        type: String
-    }
-    ,
+        type: String,
+    },
     email: {
         type: String,
         unique: true,
-        required: true
+        required: true,
     },
     password: {
         type: String,
-        required: true
+        required: true,
     },
     approved: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
     },
     roles: {
         type: Object,
         default: {
-            "User": 10000
-        }
+            User: 10000,
+        },
     },
     courses: {
         type: Array,
-        default: []
+        default: [],
     },
     refresh_token: {
-        type: String
+        type: String,
     },
     access_token: {
-        type: String
-    }
+        type: String,
+    },
+    //profile stuff
+    firstname: {
+        type: String,
+    },
+    lastname: {
+        type: String,
+    },
+    birthdate: {
+        type: String,
+    },
+    phone: {
+        type: String,
+    },
+    permanentaddr: {
+        type: String,
+    },
+    session: {
+        type: String,
+    },
+    bloodgroup: {
+        type: String,
+    },
+    hall: {
+        type: String,
+    },
+    bio: {
+        type: String,
+    },
+    fblink: {
+        type: String,
+    },
+    githublink: {
+        type: String,
+    },
+    designation: {
+        type: String,
+    },
 });
 
-
-
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);

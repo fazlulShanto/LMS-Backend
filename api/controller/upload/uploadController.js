@@ -3,7 +3,27 @@ const Express = require("express");
 const multer = require("multer");
 const path = require("path");
 
-const uploadUserProfile = () => {};
+
+const uploadUserProfile = (profileId) => {
+    const folderPath = "./uploads/users";
+    const storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, folderPath);
+        },
+        filename: (req, file, cb) => {
+            let finalName = file.originalname.split('.').pop();
+            if(req.headers.id){
+                finalName =  `${req.headers.id }.${finalName}`;
+            }
+            // console.log(req.headers.id)
+            const fileUid = require("crypto").randomBytes(16).toString("hex");
+            const fileName = finalName || `${fileUid}_${file.originalname}`;
+            cb(null, finalName);
+        },
+    });
+    const upload = multer({ storage: storage });
+    return upload;
+};
 const uploadToCourse = () => {
     const folderPath = "./uploads/courses";
     const storage = multer.diskStorage({

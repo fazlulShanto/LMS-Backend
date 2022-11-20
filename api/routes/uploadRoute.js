@@ -1,7 +1,8 @@
 const Express = require('express');
 const router  = Express.Router();
+const userModel = require('../db/Model/userModel')
 const path = require('path');
-const {quill,getT,uploadToCourse}  =require('../controller/upload/uploadController');
+const {quill,getT,uploadToCourse,uploadUserProfile}  =require('../controller/upload/uploadController');
 ////
 // const multer = require('multer');
 // const folderPath = './uploads/courses'
@@ -42,14 +43,34 @@ router.post('/file',uploadToCourse().array('file'),(req,res)=>{
     // console.log(req.body)
     // console.log('files')
     // console.log(req.files)
-    req.files.forEach(v =>{
-        console.log(v.path)
-    })
+    // req.files.forEach(v =>{
+    //     console.log(v.path)
+    // })
     res.status(200).send({msg : `done Upload`})
 });
+router.post('/img',uploadUserProfile().single('file'),async (req,res)=>{
+    // console.log('headers')
 
-router.post('/img',(req,res)=>{
-    res.send('img upload')
+    // console.log('body')
+    // console.log(req.body)
+    // console.log('files')
+
+    const id = req.headers.id;
+    const savedPath = req.file.path;
+    const pd = await userModel.findOneAndUpdate({user_uuid:id} , {
+        $set : {
+            profile_image : savedPath
+        }
+    }).exec();
+
+    if(pd){
+
+       return res.status(200).send({msg : `done Upload image`})
+    }
+
+    return res.status(500).send('image upload fialed')
 });
+
+
 
 module.exports = router;

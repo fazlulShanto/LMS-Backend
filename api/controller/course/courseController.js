@@ -55,11 +55,13 @@ const getStudentCourseList = async (req,res) =>{
         res.status(500).send();
     }
 }
-const createNewCourse = (req, res) => {
+const createNewCourse = async (req, res) => {
     // console.log(req.headers)
     const { id, code, name, desc, othersinfo, instructor ,creatorid,activeday} = req.body;
     const parsedActiveday = activeday.split(',').filter(v => parseInt(v)).map(v => parseInt(v));
     const lessons = [];
+    let teachername = await userModel.findOne({user_uuid:creatorid}).exec();
+    teachername = teachername.firstname + " " + teachername.lastname;
     const newCourse = new courseModel({
         id,
         code,
@@ -67,7 +69,7 @@ const createNewCourse = (req, res) => {
         desc,
         othersinfo,
         lessons: lessons,
-        instructor,
+        instructor : teachername,
         creatorid,
         activeday :parsedActiveday
     });
@@ -361,7 +363,7 @@ const getCourseStudentList = async (req,res)=>{
             if(ui){
                 return ({
                     id: v.stdudent_id,
-                    name : ui.username,
+                    name : `${ui.firstname} ${ui.lastname}`,
                     email : ui.email,
                     avatar : null,
                     status : v.status

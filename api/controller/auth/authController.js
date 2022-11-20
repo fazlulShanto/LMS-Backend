@@ -89,7 +89,7 @@ const handleLogin = async (req, res) => {
             user_uuid:dbUser.user_uuid,
             roles:dbUser.roles,
             accessToken: accessToken,
-            userName : dbUser.username || 'Backend'
+            userName : dbUser.firstname || 'Backend'
         })
 
     } else {
