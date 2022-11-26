@@ -1,6 +1,6 @@
 const Express = require('express');
 const router  = Express.Router();
-const {handleNewUser,sendOtp} = require('../controller/register/registerController');
+const {handleNewUser,sendOtp,changePassword} = require('../controller/register/registerController');
 
 router.post('/',(req,res)=>{
     // res.statusCode =400;
@@ -11,6 +11,9 @@ router.post('/',(req,res)=>{
 });
 router.post('/otp',(req,res)=>{
     sendOtp(req,res);
+})
+router.post('/change-password',(req,res)=>{
+    changePassword(req,res);
 })
 
 

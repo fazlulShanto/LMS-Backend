@@ -1,6 +1,8 @@
 // console.clear()
 require('./resources/clearConsole');
-require('dotenv').config();
+require('dotenv').config({
+    path:'./.env'
+});
 const cors = require('cors');
 const Express = require('express');
 const cookieParser = require('cookie-parser');
