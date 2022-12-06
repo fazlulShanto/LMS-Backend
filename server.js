@@ -5,6 +5,8 @@ require('dotenv').config({
 });
 const cors = require('cors');
 const Express = require('express');
+const http = require('http');
+const {Server} = require('socket.io');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
@@ -47,6 +49,8 @@ const refreshRoute = require('./api/routes/refreshRoute')
 const logoutRoute = require('./api/routes/logoutRoute')
 const adminRoute = require('./api/routes/adminRoute')
 const teacherRoute = require('./api/routes/teacherRoute')
+const chatRoute = require('./api/routes/chatRoute');
+const messageRoute = require('./api/routes/messageRoute');
 
 
 // app.use(Express.json());
@@ -81,9 +85,61 @@ app.use('/api/user',userRoute);
 app.use('/api/upload',uploadRoute);
 app.use('/api/course',courseRoute);
 app.use('/api/task',taskRoute);
+app.use('/api/chat',chatRoute);
+app.use('/api/message',messageRoute);
 
 
 connectDb();// start the DB connection
-app.listen(_PORT,()=>{
+
+
+const server = http.createServer(app);
+
+const io = new Server(server,{
+    cors:{
+        origin:"*"
+    }
+});
+let activeUsers = [];
+io.on('connection', (socket) => {
+ 
+    // register a user
+    socket.on('new-user-add',(userid)=>{
+        //find if the user already in the list
+
+        if(! activeUsers.find(v => v.userid == userid)){
+            activeUsers.push({
+                userid:userid,
+                socketid : socket.id
+            });
+        }
+        // console.log(`Connected users:`,activeUsers);
+    
+        io.emit('get-users',activeUsers);
+
+    });
+    //on new message  send
+
+    socket.on('send-message',(data)=>{
+        const {receiverid} = data;
+        const user = activeUsers.find( u => u.userid == receiverid);
+        // console.log('data',data);
+        // console.log('sending from ',receiverid);
+        if(user){
+            io.to(user.socketid).emit('receive-message',data);
+        }
+    })
+
+    //on disconnect an user
+    socket.on("disconnect", (reason) => {
+        // ...
+        activeUsers = activeUsers.filter(v => v.socketid !== socket.id);
+        // console.log('disconnected '+ socket.id);
+        // console.log(`Connected users:`,activeUsers);
+      });
+  
+  });
+
+
+server.listen(_PORT,()=>{
     console.log(`Backend server is running at http://localhost:${_PORT}`)
 });

@@ -171,8 +171,21 @@ async function getAllApprovedUser(req,res){
 }
 
 
+const getUserListId = async (req,res)=>{
+    const result = await userModel.find({}).select({firstname:1 , lastname : 1 ,user_uuid : 1});
+    const refined = result.map(v =>{
+        return { name :`${v.firstname} ${v.lastname}` , userid : v.user_uuid };
+    })
+
+    if(refined.length){
+         return res.status(200).json(refined);
+    }
+    return res.status(500).send('no result');
+}
+
 
 module.exports = {
     setUserInfo,getUserInfo,getAllUnApprovedUser,
-    getAllApprovedStudent,getAllApprovedTeacher,getAllCourses
+    getAllApprovedStudent,getAllApprovedTeacher,getAllCourses,
+    getUserListId
 }

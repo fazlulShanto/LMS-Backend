@@ -1,7 +1,7 @@
 const Express = require('express');
 const router  = Express.Router();
 const {initiateUserInfo,setUserInfo,getUserInfo,
-    getAllUnApprovedUser,
+    getAllUnApprovedUser,getUserListId,
     getAllApprovedStudent,getAllApprovedTeacher,getAllCourses
 } = require('../controller/users/userController');
 
@@ -40,5 +40,7 @@ router.get('/all-courses',(req,res)=>{
     // console.log(req.headers)
     getAllCourses(req,res);
 })
+/// get user list for search in chat
+router.get('/userlist',getUserListId);
 
 module.exports = router;
