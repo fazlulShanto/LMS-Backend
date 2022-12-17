@@ -57,6 +57,27 @@ const addTask = (req, res) => {
             res.status(400).send({ message: "not nice" });
         });
 };
+// ******************************************************************************
+const addAssignment = async (req,res)=>{
+    // console.log(req);
+    // console.log(req.body);
+    const { userid, taskid } = req.body;
+    const dbSave = {
+        studentid : userid,
+        filepath : req.file.filename
+       
+    }
+    const addres = await taskModel.findOneAndUpdate({taskid : taskid},{
+        $push : {
+            examinees : dbSave
+        }
+    });
+    if(addres){
+
+        return res.status(200).send({message : 'done',cid : addres.course_id});
+     }
+     return res.status(500).send({message : 'failed'});
+}
 const deleteTask = (req, res) => {
     const { id } = req.params;
     taskModel.deleteOne({ taskid: id }, (err, result) => {
@@ -221,5 +242,6 @@ module.exports = {
     getAllResponse,
     getSingleResponse,
     updateResult,
-    publishResult
+    publishResult,
+    addAssignment
 };

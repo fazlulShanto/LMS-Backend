@@ -7,7 +7,8 @@ const {verifyRoles} = require('../middleware/verifyRoles');
 
 
 const {addTask,courseTaskList,getTask,deleteTask,updateResult,publishResult,
-       addResponse,getAllResponse,getSingleResponse }  =require('../controller/task/taskController');
+       addResponse,getAllResponse,getSingleResponse ,addAssignment}  =require('../controller/task/taskController');
+const { uploadToTask } = require('../controller/upload/uploadController');
 
 router.get('/',(req,res)=>{
     // res.statusCode =400;
@@ -17,8 +18,16 @@ router.get('/',(req,res)=>{
 router.get('/:id',(req,res)=>{
     getTask(req,res);
 });
-router.post('/',multer.none() ,(req,res)=>{
+router.post('/',multer.single() ,(req,res)=>{
     addTask(req,res);
+});
+// ******************************************************************************
+
+
+router.post('/assignment',uploadToTask().single("files") ,(req,res)=>{
+    addAssignment(req,res)
+
+    // res.send('nice')
 });
 router.post('/publish',multer.none() , async (req,res)=>{
     const {status , taskid } = req.body;
