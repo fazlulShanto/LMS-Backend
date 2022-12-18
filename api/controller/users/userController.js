@@ -1,4 +1,5 @@
 const userModel = require('../../db/Model/userModel');
+const courseModel = require('../../db/Model/courseModel');
 const moment = require('moment');
 const infoArray = [
     'student_id',    'email',
@@ -183,9 +184,50 @@ const getUserListId = async (req,res)=>{
     return res.status(500).send('no result');
 }
 
+const getSchedule = async (req,res)=>{
+    const {id} = req.headers;
+    const findUser = await userModel.findOne({user_uuid:id}).exec();
+    if(findUser){
+        const {roles} = findUser;
+        const isTeacher = Object.values(roles).includes(63521);
+        const today = new Date().getDay() + 1;
+        if(isTeacher){
+            let courseList = await courseModel.find({creatorid:findUser.user_uuid}).select({
+                code:true,name:true,id:true,activeday:true
+            }).exec();
+            courseList = courseList.filter(v =>!v.activeday.includes(today)).map((course)=>{
+                return {name : course.name,code : course.code , id:course.id,key : Math.random()}
+            });
+            res.json(courseList)
+        }else{
+            let courseList = findUser.courses.map(async (v)=>{
+              
+                const courseDetails = await courseModel.findOne({id:v}).exec();
+
+                if(!courseDetails.activeday.includes(today)){
+                    return {
+                        name : courseDetails.name,
+                        id : courseDetails.id,
+                        code : courseDetails.code,
+                        key : Math.random()
+                    }
+                }else{
+                    return false;
+                }
+            })
+            const kd =await Promise.all(courseList);
+
+           const finalList = kd.filter(v => v!=false);
+           res.send(finalList)
+        }
+    }else{
+        res.status(500).send({message:"not found!"})
+    }
+
+}
 
 module.exports = {
     setUserInfo,getUserInfo,getAllUnApprovedUser,
     getAllApprovedStudent,getAllApprovedTeacher,getAllCourses,
-    getUserListId
+    getUserListId,getSchedule
 }

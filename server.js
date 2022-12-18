@@ -51,6 +51,7 @@ const adminRoute = require('./api/routes/adminRoute')
 const teacherRoute = require('./api/routes/teacherRoute')
 const chatRoute = require('./api/routes/chatRoute');
 const messageRoute = require('./api/routes/messageRoute');
+const shceduleRoute = require('./api/routes/ScheduleRoute');
 
 
 // app.use(Express.json());
@@ -87,6 +88,7 @@ app.use('/api/course',courseRoute);
 app.use('/api/task',taskRoute);
 app.use('/api/chat',chatRoute);
 app.use('/api/message',messageRoute);
+app.use('/api/schedule',shceduleRoute);
 
 
 connectDb();// start the DB connection
